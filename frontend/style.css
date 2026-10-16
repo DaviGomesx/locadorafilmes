@@ -1,0 +1,125 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f3eee7;
+    color: #333;
+}
+
+main {
+    width: 90%;
+    max-width: 1000px;
+    margin: 40px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    color: #000000;
+    margin-bottom: 30px;
+}
+
+h2 {
+    text-align: center;
+    color: #000000;
+    margin-bottom: 30px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    background-color: #5b0434;
+    color: white;
+}
+
+button:hover {
+    background-color: #ff9ce6;
+}
+
+#btnBuscar {
+    display: block;
+    margin: 20px auto;
+}
+
+#mensagem {
+    margin-top: 20px;
+    padding: 10px;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: rgb(249, 197, 245);
+}
+
+th,
+td {
+    border: 1px solid #92007a;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f194dd;
+    color: #700054;
+}
+
+tr:hover {
+    background-color: #f7f2ed;
+}
+
+/* FORMULÁRIO */
+
+#formLivro {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#formLivro input {
+    padding: 10px;
+    border: 1px solid #92007a;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#btnSalvar {
+    display: block;
+    margin: 15px auto;
+}
+
+/* BOTÕES DA TABELA */
+
+td:last-child {
+    text-align: center;
+    white-space: nowrap;
+}
+
+td:last-child button {
+    margin: 5px;
+    display: inline-block;
+}
+
+/* TELAS MENORES */
+
+@media (max-width: 600px) {
+
+    main {
+        width: 95%;
+        padding: 20px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}
