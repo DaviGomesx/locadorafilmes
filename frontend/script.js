@@ -1,181 +1,133 @@
-const botao = document.getElementById("btnBuscar");
-const listarLivros = document.getElementById("listaLivros");
+const API = "http://localhost:3000/filmes";
+const botaoBuscar = document.getElementById("btnBuscar");
+const listaFilmes = document.getElementById("listaFilmes");
 const mensagem = document.getElementById("mensagem");
+const formulario = document.getElementById("formFilme");
+const campoTitulo = document.getElementById("titulo");
+const campoDiretor = document.getElementById("diretor");
+const campoAno = document.getElementById("ano");
+const campoGenero = document.getElementById("genero");
+const campoValorDiaria = document.getElementById("valorDiaria");
+const botaoSalvar = document.getElementById("btnSalvar");
+const botaoCancelar = document.getElementById("btnCancelar");
+const tituloFormulario = document.getElementById("tituloFormulario");
+let idEdicao = null;
 
-const formulario=document.getElementById("formLivro");
-const campoTitulo=document.getElementById("titulo");
-const campoAutor=document.getElementById("autor");
-const campoAno=document.getElementById("ano");
+botaoBuscar.addEventListener("click", buscarFilmes);
+formulario.addEventListener("submit", salvarFilme);
+botaoCancelar.addEventListener("click", limparFormulario);
 
-botao.addEventListener("click", buscarLivros);
+async function buscarFilmes() {
+    try {
+        mensagem.textContent = "Carregando filmes...";
+        const resposta = await fetch(API);
+        if (!resposta.ok) throw new Error("Erro HTTP: " + resposta.status);
+        const filmes = await resposta.json();
+        listaFilmes.innerHTML = "";
 
-//formulario.addEventListener("submit", cadastrarLivro){;
-formulario.addEventListener("submit", salvarLivro);
-
-let idEdicao=null;
-
-const botaoSalvar=document.getElementById("btnSalvar");
-
-formulario.addEventListener("submit", cadastrarLivro);
-
-async function buscarLivros() {
-    try{
-        mensagem.textContent = "Buscando livros...";
-        const resposta = await fetch("http://localhost:3000/livros");
-        if(!resposta.ok) {
-            throw new Error("Erro HTTP: " + resposta.status);
-        }
-        const livros = await resposta.json();
-        listarLivros.innerHTML = "";
-        if(livros.length === 0) {
-            mensagem.textContent = "Nenhum livro cadastrado.";
+        if (filmes.length === 0) {
+            mensagem.textContent = "Nenhum filme cadastrado.";
             return;
         }
-        for(let i=0; i<livros.length; i++) {
-            listarLivros.innerHTML += `<tr><td>${livros[i].id}</td>
-            <td>${livros[i].titulo}</td>
-            <td>${livros[i].autor}</td>
-            <td>${livros[i].ano}</td>
 
-            <td>
-            <button onClick="editarLivro(${livros[i].id})">
-            Editar</button>
-
-             <button onClick="excluirLivro(${livros[i].id})">
-            Excluir</button>
-
-            </tr>`;
-        }
-        mensagem.textContent = "Livros encontrados!";
-
-    }catch(erro){
-        mensagem.textContent = "Erro ao buscar livros: ";
-        console.log("Erro:", erro);
-
-    }
-}
-
-async function salvarLivro(evento) {
-    evento.preventDefault();
-    if(idEdicao===null) {
-        await cadastrarLivro(evento);
-    } else {
-        await atualizarLivro(evento);
-    }
-
-
-//async function cadastrarLivro(evento) {
-async function cadastrarLivro() {
-    //impede o forms recarregar a página
-    //evento.preventDefault();
-    try{
-        const titulo=campoTitulo.value;
-        const autor=campoAutor.value;
-        const ano=campoAno.value;
-
-        //objeto para armazenar os dados e organizalos
-        const livro={titulo: titulo, autor: autor, ano: ano}
-        console.log("Livro enviado:", livro);
-
-        //enviar para API
-        const resposta = await fetch("http://localhost:3000/livros", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body:  JSON.stringify(livro) //transformar de js para json
-        });
-        if(!resposta.ok) {
-            throw new Error("Erro HTTP: " + resposta.status);
-        }
-
-        const dados=await resposta.json();
-        console.log("Resposta da API:", dados);
-
-        formulario.reset();
-
-        await buscarLivros();
-
-        //mostra a mensagem retorada pela API
-        mensagem.textContent = dados.mensagem;
-    
-    }catch(erro){
-        mensagem.textContent = 'Não foi possível cadastrar o livro.';
-        console.log("Erro ao cadastrar livro:", erro);
-    }
-}
-}
-
-    async function editarLivro (id) {
-        try{
-            //buscar pelo id o livro que vai ser editado
-            const resposta=await fetch("http://localhost:3000/livros/" +id);
-            if(!resposta.ok) {
-                throw new Error("Erro HTTP: " + resposta.status);
-            }
-
-            const livro=await resposta.json();
-
-            campoTitulo.value=livro.titulo;
-            campoAutor.value=livro.autor;
-            campoAno.value=livro.ano;
-
-            idEdicao=livro.id;
-            botaoSalvar.textContent="Atualizar";
-            mensagem.textContent = "Editando livro de ID: " + livro.id;
-        
-        }catch(erro){
-            mensagem.textContent = "Erro ao buscar livro para edição: ";
-            console.log("Erro ao carregar livro:", erro);
-        }
-    }
-
-    async function atualizarLivro() {
-        try{
-            const livro={
-                titulo: campoTitulo.value,
-                autor: campoAutor.value,
-                ano: campoAno.value
-            }
-            console.log("Livro atualizado:", livro);
-
-            //PUT
-            const resposta=await fetch("http://localhost:3000/livros/" + idEdicao, {
-                method: "PUT",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(livro)
+        filmes.forEach(function (filme) {
+            const linha = document.createElement("tr");
+            [filme.id, filme.titulo, filme.diretor, filme.ano, filme.genero,
+                Number(filme.valor_diaria).toFixed(2).replace(".", ",")].forEach(function (valor) {
+                const celula = document.createElement("td");
+                celula.textContent = valor;
+                linha.appendChild(celula);
             });
-            if(!resposta.ok) {
-                throw new Error("Erro HTTP: " + resposta.status);
-            }
-            const dados=await resposta.json();
-            formulario.reset();
-            idEdicao=null;
-            botaoSalvar.textContent="Cadastrar";
-            await buscarLivros();
-            mensagem.textContent = dados.mensagem;
-        
-        }catch(erro){
-            mensagem.textContent = "Erro ao atualizar livro: ";
-            console.log("Erro ao atualizar livro:", erro);
-        }
-    }
 
-async function excluirLivro(id) {
-    const confirmar = confirm("Tem certeza que deseja excluir este livro: " + id + "?");
-    if (!confirmar) {
-        return;
-    }
-    try {
-        const resposta = await fetch("http://localhost:3000/livros/" + id, {
-            method: "DELETE"
+            const acoes = document.createElement("td");
+            const botaoEditar = document.createElement("button");
+            botaoEditar.textContent = "Editar";
+            botaoEditar.addEventListener("click", function () { editarFilme(filme.id); });
+            const botaoExcluir = document.createElement("button");
+            botaoExcluir.textContent = "Excluir";
+            botaoExcluir.className = "botao-excluir";
+            botaoExcluir.addEventListener("click", function () { excluirFilme(filme.id, filme.titulo); });
+            acoes.append(botaoEditar, botaoExcluir);
+            linha.appendChild(acoes);
+            listaFilmes.appendChild(linha);
         });
-        if(!resposta.ok) {
-            throw new Error("Erro HTTP: " + resposta.status);
-        }
-        const dados = await resposta.json();
-        await buscarLivros();
-        mensagem.textContent =dados.mensagem;
-    } catch(erro) {
-        mensagem.textContent = "Erro ao excluir livro: ";
-        console.log("Erro ao excluir livro:", erro);
+        mensagem.textContent = "Filmes carregados com sucesso!";
+    } catch (erro) {
+        mensagem.textContent = "Não foi possível buscar os filmes. Confira se o servidor e o banco estão funcionando.";
+        console.error(erro);
     }
 }
+
+async function salvarFilme(evento) {
+    evento.preventDefault();
+    const filme = {
+        titulo: campoTitulo.value.trim(),
+        diretor: campoDiretor.value.trim(),
+        ano: Number(campoAno.value),
+        genero: campoGenero.value.trim(),
+        valor_diaria: Number(campoValorDiaria.value)
+    };
+
+    try {
+        const url = idEdicao === null ? API : API + "/" + idEdicao;
+        const metodo = idEdicao === null ? "POST" : "PUT";
+        const resposta = await fetch(url, {
+            method: metodo,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(filme)
+        });
+        const dados = await resposta.json();
+        if (!resposta.ok) throw new Error(dados.mensagem || "Erro ao salvar filme");
+        mensagem.textContent = dados.mensagem;
+        limparFormulario();
+        await buscarFilmes();
+    } catch (erro) {
+        mensagem.textContent = erro.message || "Não foi possível salvar o filme.";
+        console.error(erro);
+    }
+}
+
+async function editarFilme(id) {
+    try {
+        const resposta = await fetch(API + "/" + id);
+        const filme = await resposta.json();
+        if (!resposta.ok) throw new Error(filme.mensagem || "Filme não encontrado");
+        campoTitulo.value = filme.titulo;
+        campoDiretor.value = filme.diretor;
+        campoAno.value = filme.ano;
+        campoGenero.value = filme.genero;
+        campoValorDiaria.value = filme.valor_diaria;
+        idEdicao = filme.id;
+        botaoSalvar.textContent = "Salvar alterações";
+        botaoCancelar.hidden = false;
+        tituloFormulario.textContent = "Editar filme";
+        mensagem.textContent = "Editando filme de ID: " + filme.id;
+        formulario.scrollIntoView({ behavior: "smooth" });
+    } catch (erro) {
+        mensagem.textContent = erro.message || "Não foi possível carregar o filme.";
+    }
+}
+
+async function excluirFilme(id, titulo) {
+    if (!confirm('Deseja realmente excluir o filme "' + titulo + '"?')) return;
+    try {
+        const resposta = await fetch(API + "/" + id, { method: "DELETE" });
+        const dados = await resposta.json();
+        if (!resposta.ok) throw new Error(dados.mensagem || "Erro ao excluir filme");
+        mensagem.textContent = dados.mensagem;
+        if (idEdicao === id) limparFormulario();
+        await buscarFilmes();
+    } catch (erro) {
+        mensagem.textContent = erro.message || "Não foi possível excluir o filme.";
+    }
+}
+
+function limparFormulario() {
+    formulario.reset();
+    idEdicao = null;
+    botaoSalvar.textContent = "Cadastrar filme";
+    botaoCancelar.hidden = true;
+    tituloFormulario.textContent = "Cadastrar filme";
+}
+
+buscarFilmes();

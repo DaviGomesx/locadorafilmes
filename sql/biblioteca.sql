@@ -1,17 +1,20 @@
-create database biblioteca_dom;
-use biblioteca_dom;
+CREATE DATABASE IF NOT EXISTS locadora_filmes;
+USE locadora_filmes;
 
-create table livros(
-id int auto_increment primary key,
-titulo varchar(150) not null,
-autor varchar(100) not null,
-ano int not null
+CREATE TABLE IF NOT EXISTS filmes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(150) NOT NULL,
+    diretor VARCHAR(100) NOT NULL,
+    ano INT NOT NULL,
+    genero VARCHAR(60) NOT NULL,
+    valor_diaria DECIMAL(8,2) NOT NULL
 );
 
-insert into livros(titulo, autor, ano) values
-('Dom Casmurro', 'Machado de Assis', 1899),
-('O Hobbit', 'J. R. R. Tolkien', 1937),
-('1984', 'Geoge Orwell', 1937),
-('O pequeno Príncipe', 'Antoine e Saint-Exupéry', 1943),
-('Harry Potter e a Pedra Filosofal', 'J. K. Rowling', 1997);
-select * from livros;
+INSERT INTO filmes (titulo, diretor, ano, genero, valor_diaria) VALUES
+('Harry Potter e a Pedra Filosofal', 'Chris Columbus', 2001, 'Fantasia', 5.00),
+('Harry Potter e a Câmara Secreta', 'Chris Columbus', 2002, 'Fantasia', 5.00),
+('Jurassic Park', 'Steven Spielberg', 1993, 'Aventura', 4.50),
+('Homem-Aranha', 'Sam Raimi', 2002, 'Ação', 4.00),
+('Divertida Mente', 'Pete Docter', 2015, 'Animação', 4.00);
+
+SELECT * FROM filmes;

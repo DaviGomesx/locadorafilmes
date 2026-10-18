@@ -1,0 +1,45 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f3eee7;
+    color: #333;
+}
+main {
+    width: 92%;
+    max-width: 1100px;
+    margin: 35px auto;
+    background: white;
+    padding: 28px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+}
+h1, h2 { text-align: center; color: #5b0434; }
+h1 { margin-bottom: 8px; }
+.descricao { text-align: center; color: #666; }
+button {
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    background-color: #5b0434;
+    color: white;
+    margin: 3px;
+}
+button:hover { background-color: #8a235d; }
+#btnBuscar { display: block; margin: 20px auto; }
+#mensagem { margin: 16px 0; padding: 10px; text-align: center; }
+table { width: 100%; margin-top: 20px; border-collapse: collapse; background: #fff8fc; }
+th, td { border: 1px solid #d9b6ca; padding: 10px; text-align: left; }
+th { background: #f0d5e3; color: #5b0434; }
+tr:hover { background: #fbf1f6; }
+section { margin-top: 35px; }
+#formFilme { display: flex; flex-direction: column; gap: 8px; max-width: 650px; margin: 0 auto; }
+#formFilme input { padding: 10px; border: 1px solid #c9a2b7; border-radius: 6px; font-size: 16px; width: 100%; box-sizing: border-box; }
+.botoes-formulario { text-align: center; margin-top: 12px; }
+.botao-excluir { background: #8c2626; }
+@media (max-width: 750px) {
+    main { width: 96%; padding: 16px; }
+    table { display: block; overflow-x: auto; white-space: nowrap; }
+}
